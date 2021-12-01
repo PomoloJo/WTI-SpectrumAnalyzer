@@ -8,3 +8,6 @@ WTI-SA.vcxproj
 WTI-SA.vcxproj.filters
 WTI-SA.vcxproj.user
 .vs/
+debug/
+release/
+
