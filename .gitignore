@@ -2,9 +2,9 @@
 Makefile
 Makefile.Debug
 Makefile.Release
-WTI_SA.pro.user
-WTI_SA.sln
-WTI_SA.vcxproj
-WTI_SA.vcxproj.filters
-WTI_SA.vcxproj.user
+WTI-SA.pro.user
+WTI-SA.sln
+WTI-SA.vcxproj
+WTI-SA.vcxproj.filters
+WTI-SA.vcxproj.user
 .vs/
