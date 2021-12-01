@@ -1,0 +1,10 @@
+.qmake.stash
+Makefile
+Makefile.Debug
+Makefile.Release
+WTI_SA.pro.user
+WTI_SA.sln
+WTI_SA.vcxproj
+WTI_SA.vcxproj.filters
+WTI_SA.vcxproj.user
+.vs/
