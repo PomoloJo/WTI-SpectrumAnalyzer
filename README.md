@@ -1,3 +1,0 @@
-# WTI-SpectrumAnalyzer
-
-test1

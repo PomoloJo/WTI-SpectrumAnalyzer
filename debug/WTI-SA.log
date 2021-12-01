@@ -1,3 +1,0 @@
-﻿  mainwindow.cpp
-D:\BLACK_BIRD\WTI-SpectrumAnalyzer\source\mainwindow.cpp(44,15): warning C4189: “pgraph”: 局部变量已初始化但不引用
-  WTI-SA.vcxproj -> D:\BLACK_BIRD\WTI-SpectrumAnalyzer\bin\WTI-SA.exe
