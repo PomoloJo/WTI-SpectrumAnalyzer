@@ -21,7 +21,7 @@ public:
 private:
     Ui::MainWindow *ui;
 
-    CWorkThread *_p_my_thread;
+    CWorkThread* _p_work_thread;
 
     void initUi();
     void initMember();
@@ -31,5 +31,7 @@ private slots:
     // 只要把函数名改成 on_按键名_clicked(),
     // moc文件中的 QMetaObject::connectSlotsByName 就会自动把按键和该槽函数连接起来
     void on_btn_start_clicked();
+
+    void timeToReplot(double*);
 };
 #endif // MAINWINDOW_H

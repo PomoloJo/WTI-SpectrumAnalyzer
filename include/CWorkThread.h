@@ -15,11 +15,16 @@ public:
     CWorkThread(QObject* parent, int sleep_time);
     ~CWorkThread();
     void run();
-    void stop();
+    void stopRunning();
+
+signals:
+    void sendData(double*);
+
 private:
     QObject* _parent;
     int _sleep_time;
     bool _keep_runing;
+    double* _p_recv_data;
 
 };
 
