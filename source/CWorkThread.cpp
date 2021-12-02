@@ -23,7 +23,7 @@ void CWorkThread::run()
     {
         for (int i = 0; i < 10000; i++)
         {
-            _p_recv_data[i] = rand();
+            _p_recv_data[i] = rand()%30 - 60.0;
         }
         emit sendData(_p_recv_data);
         qDebug() << "sended data";

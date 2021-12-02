@@ -9,6 +9,10 @@ MainWindow::MainWindow(QWidget *parent) :
     this->initUi();
     this->initMember();
 
+    // 安装事件过滤器，this监控widget_plot的事件
+    ui->widget_plot->installEventFilter(this);
+    ui->widget_plot->setMouseTracking(true);
+
     _p_work_thread = new CWorkThread(this, 1);
     connect(_p_work_thread, &CWorkThread::sendData, this, &MainWindow::timeToReplot);
 }
@@ -32,6 +36,32 @@ void MainWindow::initUi()
 void MainWindow::initMember()
 {
     qDebug() << "test";
+}
+
+// 重写事件过滤器，用于过滤鼠标事件
+bool MainWindow::eventFilter(QObject* target, QEvent* event)
+{
+    static bool mouse_right_btn_pressed = false;
+    QMouseEvent* mouse_event = (QMouseEvent*)event;
+    if (target == ui->widget_plot)
+    {
+        if (event->type() == QEvent::MouseButtonPress)
+        {
+            if (mouse_event->buttons() == Qt::RightButton)
+            {
+                mouse_right_btn_pressed = true;
+                ui->widget_plot->axisRect()->setRangeZoom(Qt::Vertical);
+                return true;
+            }
+        }
+        else if ((event->type() == QEvent::MouseButtonRelease) && mouse_right_btn_pressed)
+        {
+            mouse_right_btn_pressed = false;
+            ui->widget_plot->axisRect()->setRangeZoom(Qt::Horizontal|Qt::Vertical);
+            return true;
+        }
+    }
+    return QObject::eventFilter(target, event);
 }
 
 
@@ -65,7 +95,7 @@ void MainWindow::on_btn_start_clicked()
         //设置X轴范围
         p_custom_plot->xAxis->setRange(0, x.size());
         //设置Y轴范围
-        p_custom_plot->yAxis->setRange(-30, 30);
+        p_custom_plot->yAxis->setRange(-100, 0);
         //x轴名字
         p_custom_plot->xAxis->setLabel("X");
         //Y轴名字
@@ -95,10 +125,6 @@ void MainWindow::timeToReplot(double* recv_data)
     qDebug() << "run replot";
 
     QCustomPlot* p_custom_plot = ui->widget_plot;
-    //清除所有graph
-    p_custom_plot->clearGraphs();
-    //添加一条曲线
-    QCPGraph* pgraph = p_custom_plot->addGraph();
     QVector<double> x(10000);
     for (int i = 0; i < x.size(); i++)
     {

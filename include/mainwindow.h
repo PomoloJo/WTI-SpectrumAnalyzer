@@ -18,6 +18,9 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+public slots:
+    bool eventFilter(QObject*, QEvent*);
+
 private:
     Ui::MainWindow *ui;
 
