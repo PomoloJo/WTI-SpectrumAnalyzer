@@ -22,8 +22,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_MainWindow_t {
-    QByteArrayData data[7];
-    char stringdata0[74];
+    QByteArrayData data[8];
+    char stringdata0[90];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -38,12 +38,13 @@ QT_MOC_LITERAL(2, 23, 0), // ""
 QT_MOC_LITERAL(3, 24, 7), // "QEvent*"
 QT_MOC_LITERAL(4, 32, 20), // "on_btn_start_clicked"
 QT_MOC_LITERAL(5, 53, 12), // "timeToReplot"
-QT_MOC_LITERAL(6, 66, 7) // "double*"
+QT_MOC_LITERAL(6, 66, 13), // "const double*"
+QT_MOC_LITERAL(7, 80, 9) // "point_num"
 
     },
     "MainWindow\0eventFilter\0\0QEvent*\0"
     "on_btn_start_clicked\0timeToReplot\0"
-    "double*"
+    "const double*\0point_num"
 };
 #undef QT_MOC_LITERAL
 
@@ -63,12 +64,12 @@ static const uint qt_meta_data_MainWindow[] = {
  // slots: name, argc, parameters, tag, flags
        1,    2,   29,    2, 0x0a /* Public */,
        4,    0,   34,    2, 0x08 /* Private */,
-       5,    1,   35,    2, 0x08 /* Private */,
+       5,    2,   35,    2, 0x08 /* Private */,
 
  // slots: parameters
     QMetaType::Bool, QMetaType::QObjectStar, 0x80000000 | 3,    2,    2,
     QMetaType::Void,
-    QMetaType::Void, 0x80000000 | 6,    2,
+    QMetaType::Void, 0x80000000 | 6, QMetaType::Int,    2,    7,
 
        0        // eod
 };
@@ -82,7 +83,7 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 0: { bool _r = _t->eventFilter((*reinterpret_cast< QObject*(*)>(_a[1])),(*reinterpret_cast< QEvent*(*)>(_a[2])));
             if (_a[0]) *reinterpret_cast< bool*>(_a[0]) = std::move(_r); }  break;
         case 1: _t->on_btn_start_clicked(); break;
-        case 2: _t->timeToReplot((*reinterpret_cast< double*(*)>(_a[1]))); break;
+        case 2: _t->timeToReplot((*reinterpret_cast< const double*(*)>(_a[1])),(*reinterpret_cast< const int(*)>(_a[2]))); break;
         default: ;
         }
     }

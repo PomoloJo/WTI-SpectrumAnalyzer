@@ -1,4 +1,4 @@
-#include "CShareMemory.h"
+#include "./include/CShareMemory/CShareMemory.h"
 
 CShareMemory::CShareMemory(int memory_size) :
 	_memory_size(memory_size),
@@ -32,6 +32,18 @@ CShareMemory::~CShareMemory()
 	{
 		CloseHandle(_h_file_map);
 		_h_file_map = INVALID_HANDLE_VALUE;
+	}
+
+	// ¹Ø±ÕÆäÓà¾ä±ú
+	if (_h_sender_event != INVALID_HANDLE_VALUE)
+	{
+		CloseHandle(_h_sender_event);
+		_h_sender_event = INVALID_HANDLE_VALUE;
+	}
+	if (_h_receiver_event != INVALID_HANDLE_VALUE)
+	{
+		CloseHandle(_h_receiver_event);
+		_h_receiver_event = INVALID_HANDLE_VALUE;
 	}
 }
 

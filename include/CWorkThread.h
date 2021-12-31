@@ -7,6 +7,8 @@
 #include <QObject>
 #include <QDebug>
 
+#include "./include/CShareMemory/CShareMemory.h"
+
 
 class CWorkThread : public QThread
 {
@@ -18,14 +20,14 @@ public:
     void stopRunning();
 
 signals:
-    void sendData(double*);
+    // send to draw
+    void sendData(const double*, const int) const;
 
 private:
-    QObject* _parent;
-    int _sleep_time;
-    bool _keep_runing;
-    double* _p_recv_data;
-
+    QObject* m_parent;
+    int m_sleep_time;
+    bool m_keep_runing;
+    double* m_recv_data;
 };
 
 #endif // !CWORKTHREAD_H

@@ -1,38 +1,59 @@
 #include "./include/CWorkThread.h"
+#include "./include/CShareMemory/CShareMemory.h"
+
+// 在接收数据之前，在共享内存区域创建之前，就应该提前决定共享区域大小
+const int MYSM_LENGTH{ 500000 };
 
 CWorkThread::CWorkThread(QObject* parent = nullptr, int sleep_time = 0) :
-    _parent(parent),
-    _sleep_time(sleep_time),
-    _keep_runing(false)
-{
-    _p_recv_data = new double[10000];
-}
+    m_parent(parent),
+    m_sleep_time(sleep_time),
+    m_keep_runing(false),
+    m_recv_data(nullptr)
+{}
 
 
 CWorkThread::~CWorkThread()
 {
-    _keep_runing = false;
-    delete[] _p_recv_data;
-    _p_recv_data = nullptr;
+    m_keep_runing = false;
+    // 下面这个貌似不需要加也可以
+    if (m_recv_data != nullptr)
+    {
+        delete[] m_recv_data;
+        m_recv_data = nullptr;
+    }
 }
 
 void CWorkThread::run()
 {
-    _keep_runing = true;
-    while (_keep_runing)
+    m_recv_data = new double[MYSM_LENGTH];
+    CShareMemory mysm(MYSM_LENGTH + 1);
+
+    m_keep_runing = true;
+    while (m_keep_runing)
     {
-        for (int i = 0; i < 10000; i++)
+        mysm.receiverWait();
+        int recv_data_len = mysm.readShareData(m_recv_data);
+        mysm.receiverNotifySender();
+        // 用于生成模拟数据
+        /*for (int i = 0; i < 10000; i++)
         {
-            _p_recv_data[i] = rand()%30 - 60.0;
-        }
-        emit sendData(_p_recv_data);
-        qDebug() << "sended data";
-        sleep(_sleep_time);
+            m_recv_data[i] = rand()%30 - 60.0;
+        }*/
+
+        // 第二个参数是点数，告诉绘图函数要画多少个点
+        emit sendData(m_recv_data, recv_data_len);
+        qDebug() << recv_data_len;
+        sleep(m_sleep_time);
+    }
+    if (m_recv_data != nullptr)
+    {
+        delete[] m_recv_data;
+        m_recv_data = nullptr;
     }
 }
 
 void CWorkThread::stopRunning()
 {
     qDebug() << "mythread " << this << " stop";
-    _keep_runing = false;
+    m_keep_runing = false;
 }

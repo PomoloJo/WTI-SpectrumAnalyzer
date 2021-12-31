@@ -13,13 +13,13 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->widget_plot->installEventFilter(this);
     ui->widget_plot->setMouseTracking(true);
 
-    _p_work_thread = new CWorkThread(this, 1);
-    connect(_p_work_thread, &CWorkThread::sendData, this, &MainWindow::timeToReplot);
+    m_p_work_thread = new CWorkThread(this, 1);
+    connect(m_p_work_thread, &CWorkThread::sendData, this, &MainWindow::timeToReplot);
 }
 
 MainWindow::~MainWindow()
 {
-    delete _p_work_thread;
+    delete m_p_work_thread;
     delete ui;
 }
 
@@ -74,26 +74,14 @@ void MainWindow::on_btn_start_clicked()
     {
         QCustomPlot* p_custom_plot = ui->widget_plot;
 
-        //清除所有graph
+        // 清除所有graph
         p_custom_plot->clearGraphs();
 
-        //添加一条曲线
+        // 添加一条曲线
         QCPGraph* pgraph = p_custom_plot->addGraph();
 
-        //给曲线准备数据 设置数据 
-        QVector<double> x(10000);
-        QVector<double> y(10000);
-
-        for (int i = 0; i < x.size(); i++)
-        {
-            x[i] = i;
-            y[i] = rand();
-        }
-
-        //设置数据
-        p_custom_plot->graph(0)->setData(x, y);
         //设置X轴范围
-        p_custom_plot->xAxis->setRange(0, x.size());
+        p_custom_plot->xAxis->setRange(0, 10000);
         //设置Y轴范围
         p_custom_plot->yAxis->setRange(-100, 0);
         //x轴名字
@@ -108,32 +96,42 @@ void MainWindow::on_btn_start_clicked()
         //重绘，应用所有更改的设置
         p_custom_plot->replot();
 
-        _p_work_thread->start();
+        m_p_work_thread->start();
         ui->btn_start->setText("      STOP      ");
     }
     else
     {
-        _p_work_thread->stopRunning();
+        m_p_work_thread->stopRunning();
         ui->btn_start->setText("      START      ");
+        is_first_time_to_replot = true;
     }
 
 
 }
 
-void MainWindow::timeToReplot(double* recv_data)
+void MainWindow::timeToReplot(const double* recv_data, const int point_num)
 {
-    qDebug() << "run replot";
-
     QCustomPlot* p_custom_plot = ui->widget_plot;
-    QVector<double> x(10000);
-    for (int i = 0; i < x.size(); i++)
+    static QVector<double> x(point_num);
+
+    if (is_first_time_to_replot)
     {
-        x[i] = i;
+        qDebug() << "first time to replot";
+        p_custom_plot->xAxis->setRange(0, point_num);
+        for (int i = 0; i < point_num; i++)
+        {
+            x[i] = i;
+        }
+        is_first_time_to_replot = false;
     }
-    QVector<double> y(recv_data, recv_data + 10000);
-    p_custom_plot->graph(0)->setData(x, y);
-    //重绘，应用所有更改的设置
-    p_custom_plot->replot();
+    else
+    {
+        qDebug() << "run replot";
+        QVector<double> y(recv_data, recv_data + point_num);
+        p_custom_plot->graph(0)->setData(x, y);
+        //重绘，应用所有更改的设置
+        p_custom_plot->replot();
+    }
 }
 
 
