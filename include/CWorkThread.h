@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef CWORKTHREAD_H
-#define CWORKTHREAD_H
+#ifndef CWORKTHREAD_H_
+#define CWORKTHREAD_H_
 
 #include <QThread>
 #include <QObject>
@@ -30,7 +30,7 @@ private:
     double* m_recv_data;
 };
 
-#endif // !CWORKTHREAD_H
+#endif // !CWORKTHREAD_H_
 
 
 

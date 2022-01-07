@@ -4,7 +4,7 @@
 
 #include <QMainWindow>
 #include "CWorkThread.h"
-
+#include <QtWidgets/QLabel>
 #include <iostream>
 
 
@@ -27,7 +27,8 @@ private:
     Ui::MainWindow *ui;
 
     CWorkThread* m_p_work_thread;
-
+    QStatusBar* m_status_bar;
+    QLabel* m_mouse_coordinate;
     bool is_first_time_to_replot{ true };
 
     void initUi();
