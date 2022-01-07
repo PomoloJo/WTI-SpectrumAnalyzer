@@ -23,7 +23,7 @@ QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_CWorkThread_t {
     QByteArrayData data[4];
-    char stringdata0[30];
+    char stringdata0[36];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -35,10 +35,10 @@ static const qt_meta_stringdata_CWorkThread_t qt_meta_stringdata_CWorkThread = {
 QT_MOC_LITERAL(0, 0, 11), // "CWorkThread"
 QT_MOC_LITERAL(1, 12, 8), // "sendData"
 QT_MOC_LITERAL(2, 21, 0), // ""
-QT_MOC_LITERAL(3, 22, 7) // "double*"
+QT_MOC_LITERAL(3, 22, 13) // "const double*"
 
     },
-    "CWorkThread\0sendData\0\0double*"
+    "CWorkThread\0sendData\0\0const double*"
 };
 #undef QT_MOC_LITERAL
 
@@ -56,10 +56,10 @@ static const uint qt_meta_data_CWorkThread[] = {
        1,       // signalCount
 
  // signals: name, argc, parameters, tag, flags
-       1,    1,   19,    2, 0x06 /* Public */,
+       1,    2,   19,    2, 0x06 /* Public */,
 
  // signals: parameters
-    QMetaType::Void, 0x80000000 | 3,    2,
+    QMetaType::Void, 0x80000000 | 3, QMetaType::Int,    2,    2,
 
        0        // eod
 };
@@ -70,13 +70,13 @@ void CWorkThread::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id,
         auto *_t = static_cast<CWorkThread *>(_o);
         Q_UNUSED(_t)
         switch (_id) {
-        case 0: _t->sendData((*reinterpret_cast< double*(*)>(_a[1]))); break;
+        case 0: _t->sendData((*reinterpret_cast< const double*(*)>(_a[1])),(*reinterpret_cast< const int(*)>(_a[2]))); break;
         default: ;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
         int *result = reinterpret_cast<int *>(_a[0]);
         {
-            using _t = void (CWorkThread::*)(double * );
+            using _t = void (CWorkThread::*)(const double * , const int ) const;
             if (*reinterpret_cast<_t *>(_a[1]) == static_cast<_t>(&CWorkThread::sendData)) {
                 *result = 0;
                 return;
@@ -126,10 +126,10 @@ int CWorkThread::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 }
 
 // SIGNAL 0
-void CWorkThread::sendData(double * _t1)
+void CWorkThread::sendData(const double * _t1, const int _t2)const
 {
-    void *_a[] = { nullptr, const_cast<void*>(reinterpret_cast<const void*>(std::addressof(_t1))) };
-    QMetaObject::activate(this, &staticMetaObject, 0, _a);
+    void *_a[] = { nullptr, const_cast<void*>(reinterpret_cast<const void*>(std::addressof(_t1))), const_cast<void*>(reinterpret_cast<const void*>(std::addressof(_t2))) };
+    QMetaObject::activate(const_cast< CWorkThread *>(this), &staticMetaObject, 0, _a);
 }
 QT_WARNING_POP
 QT_END_MOC_NAMESPACE

@@ -1,9 +1,11 @@
 #pragma once
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef MAINWINDOW_H_
+#define MAINWINDOW_H_
 
 #include <QMainWindow>
 #include "CWorkThread.h"
+#include <QtWidgets/QLabel>
+#include <iostream>
 
 
 QT_BEGIN_NAMESPACE
@@ -24,7 +26,10 @@ public slots:
 private:
     Ui::MainWindow *ui;
 
-    CWorkThread* _p_work_thread;
+    CWorkThread* m_p_work_thread;
+    QStatusBar* m_status_bar;
+    QLabel* m_mouse_coordinate;
+    bool is_first_time_to_replot{ true };
 
     void initUi();
     void initMember();
@@ -35,6 +40,6 @@ private slots:
     // moc文件中的 QMetaObject::connectSlotsByName 就会自动把按键和该槽函数连接起来
     void on_btn_start_clicked();
 
-    void timeToReplot(double*);
+    void timeToReplot(const double*, const int point_num);
 };
-#endif // MAINWINDOW_H
+#endif // MAINWINDOW_H_

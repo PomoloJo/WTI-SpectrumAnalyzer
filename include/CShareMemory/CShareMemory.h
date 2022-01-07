@@ -1,5 +1,9 @@
 #pragma once
 
+#ifndef CSHARE_MEMORY_H_
+#define CSHARE_MEMORY_H_
+
+
 #include<iostream>
 #include<stdio.h>
 #include<Windows.h>
@@ -36,4 +40,6 @@ public:
 	int readShareData(double*);
 	int writeShareData(double[], int);
 };
+
+#endif // !CSHARE_MEMORY_H_
 
