@@ -14,7 +14,7 @@ class CWorkThread : public QThread
 {
     Q_OBJECT
 public:
-    CWorkThread(QObject* parent, int sleep_time);
+    CWorkThread(QObject* parent = nullptr, int sleep_time = 0);
     ~CWorkThread();
     void run();
     void stopRunning();
