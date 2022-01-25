@@ -39,6 +39,7 @@ private slots:
     // 只要把函数名改成 on_按键名_clicked(),
     // moc文件中的 QMetaObject::connectSlotsByName 就会自动把按键和该槽函数连接起来
     void on_btn_start_clicked();
+    void on_btn_close_clicked();
 
     void timeToReplot(const double*, const int point_num);
 };

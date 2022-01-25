@@ -9,18 +9,25 @@ MainWindow::MainWindow(QWidget *parent) :
     this->initUi();
     this->initMember();
 
+    //去除系统带的标题栏
+    setWindowFlags(Qt::FramelessWindowHint | windowFlags());
+    //安装事件过滤器，this监控title_widget实现鼠标拖拽标题栏
+    ui->title_widget->installEventFilter(this);
     // 安装事件过滤器，this监控widget_plot的事件
     ui->widget_plot->installEventFilter(this);
     ui->widget_plot->setMouseTracking(true);
 
-    m_p_work_thread = new CWorkThread(this, 200);
+    //右上角按钮事件过滤
+    ui->btn_close->installEventFilter(this);
+
+    // 工作线程，第二个参数是时间间隔，默认值0ms
+    m_p_work_thread = new CWorkThread(this);
 
     // 添加状态栏
-    m_status_bar = statusBar();//创建状态栏
     m_mouse_coordinate = new QLabel("realtime mouse coordinate", this);
     //addWidget是从左往右添加, addPermanentWidget是从右往左添加
-    //status_bar->addWidget(new QLabel("1", this));
-    m_status_bar->addPermanentWidget(m_mouse_coordinate);
+    //ui->statusbar->addWidget(new QLabel("1", this));
+    ui->statusbar->addPermanentWidget(m_mouse_coordinate);
 
 
     connect(m_p_work_thread, &CWorkThread::sendData, this, &MainWindow::timeToReplot);
@@ -35,26 +42,103 @@ MainWindow::~MainWindow()
 
 void MainWindow::initUi()
 {
-    // add every dock_widget into list
-    QList<QDockWidget*> dock_list;
-    dock_list.append(ui->dockWidget);
-    // or use {dockWidget1, dockWidget2, ...} directly
-    resizeDocks(dock_list, {300}, Qt::Horizontal);
+    // icons setting
+    ui->btn_close->setFlat(true);
+    ui->btn_max->setFlat(true);
+    ui->btn_min->setFlat(true);
+     
+    //ui->btn_close->setIcon(QIcon(":/icons/close.png")); // 该写法在vs中似乎无法生效
+    ui->btn_close->setIcon(QIcon("./resource/icons/close4.png"));
+
+
+    ui->widget_plot->setBackground(QColor(8, 8, 8));
+    ui->widget_plot->xAxis->grid()->setPen(QPen(QColor(32, 32, 32), 1, Qt::PenStyle::DashLine));//网格线
+    ui->widget_plot->yAxis->grid()->setPen(QPen(QColor(32, 32, 32), 1, Qt::PenStyle::DashLine));//网格线
+    ui->widget_plot->xAxis->grid()->setSubGridPen(QPen(QColor(25, 25, 25), 1, Qt::DotLine));//子网格线
+    ui->widget_plot->yAxis->grid()->setSubGridPen(QPen(QColor(25, 25, 25), 1, Qt::DotLine));//子网格线
+    ui->widget_plot->xAxis->grid()->setSubGridVisible(true);//显示x轴子网格线
+    ui->widget_plot->yAxis->grid()->setSubGridVisible(true);//显示y轴子网格线
 }
 
 void MainWindow::initMember()
 {
-    qDebug() << "test";
+    qDebug() << "init";
 }
 
-// 重写事件过滤器，用于过滤鼠标事件
+// 重写事件过滤器
 bool MainWindow::eventFilter(QObject* target, QEvent* event)
 {
+    // 目前主要是重写鼠标事件
     static float pos_x;
     static float pos_y;
+    static bool mouse_left_btn_pressed = false;
     static bool mouse_right_btn_pressed = false;
+    static QPoint mousePoint;
     QMouseEvent* mouse_event = (QMouseEvent*)event;
-    if (target == ui->widget_plot)
+
+    // 当目标是右上角button
+    // 这里不要 return true，直接 break 就好，因为会把事件截掉，除非后续触发的操作比如关闭事件也手动写上
+    if (ui->btn_close == target)
+    {
+        switch (event->type()) 
+        {
+            case QEvent::HoverEnter:
+            {
+                ui->btn_close->setIcon(QIcon("./resource/icons/close2.png"));
+                break;
+            }
+            case QEvent::HoverLeave:
+            {
+                ui->btn_close->setIcon(QIcon("./resource/icons/close4.png"));
+                break;
+            }
+            case QEvent::MouseButtonPress:
+            {
+                ui->btn_close->setIcon(QIcon("./resource/icons/close3.png"));
+                break;
+            }
+            case QEvent::MouseButtonRelease:
+            {
+                ui->btn_close->setIcon(QIcon("./resource/icons/close4.png"));
+                break;
+            }
+            default:
+                break;
+        }
+    }
+
+    // 当目标是标题栏时实现拖拽
+    if (ui->title_widget == target)
+    {
+        switch (event->type())
+        {
+            case QEvent::MouseButtonPress:
+            {
+                if (mouse_event->buttons() == Qt::LeftButton) {
+                    mouse_left_btn_pressed = true;
+                    mousePoint = mouse_event->globalPos() - this->pos();
+                    return true;
+                }
+            }
+            case QEvent::MouseButtonRelease:
+            {
+                mouse_left_btn_pressed = false;
+                return true;
+            }
+            case QEvent::MouseMove:
+            {
+                if (mouse_left_btn_pressed && (mouse_event->buttons() && Qt::LeftButton)) {
+                    this->move(mouse_event->globalPos() - mousePoint);
+                    return true;
+                }
+            }
+            default:
+                break;
+        }
+    }
+
+    // 当目标是绘图绘图窗口时实现缩放，显示坐标等鼠标事件
+    if (ui->widget_plot == target)
     {
         if (event->type() == QEvent::MouseButtonPress)
         {
@@ -77,7 +161,7 @@ bool MainWindow::eventFilter(QObject* target, QEvent* event)
             pos_x = ui->widget_plot->xAxis->pixelToCoord(mouse_event->pos().x());
             pos_y = ui->widget_plot->yAxis->pixelToCoord(mouse_event->pos().y());
             //qDebug() << pos_x << ", " << pos_y;
-            m_mouse_coordinate->setText(QString("%1,   %2 dbm").arg(pos_x).arg(pos_y));
+            m_mouse_coordinate->setText(QString("%1,   %2 dBm").arg(pos_x).arg(pos_y));
         }   
     }
     return QObject::eventFilter(target, event);
@@ -105,7 +189,8 @@ void MainWindow::on_btn_start_clicked()
         auto vbw = ui->doubleSpinBox_vbw->value();
         auto sweep_time = 0.001;
         QString cmdline_str;
-        cmdline_str.sprintf("device_driver\\bb60c\\bb60c.exe %fe6 %fe6 %fe3 %fe3 %f", freq, bw, rbw, vbw, sweep_time);
+        //cmdline_str.sprintf("device_driver\\bb60c\\bb60c.exe %fe6 %fe6 %fe3 %fe3 %f", freq, bw, rbw, vbw, sweep_time);
+        cmdline_str.sprintf("device_driver\\bb60c\\fake_data.exe");
         qDebug() <<cmdline_str;
         //WCHAR cmdline[] = L"device_driver\\bb60c\\bb60c.exe 1000.000000e6 100.000000e6 100e3 10e3 0.001";
         auto cmdline_temp = cmdline_str.toStdWString();
@@ -122,7 +207,7 @@ void MainWindow::on_btn_start_clicked()
         CloseHandle(pi.hThread);
         CloseHandle(pi.hProcess);
 
-        Sleep(3000);
+        Sleep(2500);
 
 
         QCustomPlot* p_custom_plot = ui->widget_plot;
@@ -132,15 +217,12 @@ void MainWindow::on_btn_start_clicked()
 
         // 添加一条曲线
         QCPGraph* pgraph = p_custom_plot->addGraph();
+        pgraph->setPen(QPen(QColor(16, 255, 32)));
 
         //设置X轴范围
         //p_custom_plot->xAxis->setRange(0, 10000);
         //设置Y轴范围
         p_custom_plot->yAxis->setRange(-100, 0);
-        //x轴名字
-        p_custom_plot->xAxis->setLabel("X");
-        //Y轴名字
-        p_custom_plot->yAxis->setLabel("Y");
         //设置大小
         p_custom_plot->resize(ui->widget_plot->width(), ui->widget_plot->height());
         //可以进行鼠标位置放大缩小、拖拽 、放大缩小坐标系
@@ -155,15 +237,28 @@ void MainWindow::on_btn_start_clicked()
     }
     else
     {
-        // 强制退出
-        std::string device_exe = std::string("TASKKILL /F /IM bb60c.exe");  // + exe_name;
+        // 接收exe强制退出
+        std::string device_exe = std::string("TASKKILL /F /IM fake_data.exe");  // + exe_name;
         WinExec(device_exe.c_str(), SW_HIDE);
 
+        // 结束进程
         m_p_work_thread->stopRunning();
+    
         ui->btn_start->setText("      START      ");
     }
     // 只要点击按钮，就刷新重绘
     is_first_time_to_replot = true;
+}
+
+void MainWindow::on_btn_close_clicked()
+{
+    QString btn_start_text(ui->btn_start->text());
+    if (btn_start_text.contains("stop", Qt::CaseInsensitive))
+    {
+        on_btn_start_clicked();
+    }
+    //Sleep(1000);
+    this->close();
 }
 
 void MainWindow::timeToReplot(const double* recv_data, const int point_num)
