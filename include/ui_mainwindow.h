@@ -11,14 +11,19 @@
 
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
+#include <QtWidgets/QCheckBox>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QDockWidget>
 #include <QtWidgets/QDoubleSpinBox>
+#include <QtWidgets/QFrame>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QLabel>
+#include <QtWidgets/QListWidget>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QPushButton>
+#include <QtWidgets/QRadioButton>
+#include <QtWidgets/QSlider>
 #include <QtWidgets/QSpacerItem>
 #include <QtWidgets/QStackedWidget>
 #include <QtWidgets/QStatusBar>
@@ -46,8 +51,35 @@ public:
     QSpacerItem *horizontalSpacer_menu;
     QWidget *main_widget;
     QHBoxLayout *horizontalLayout_4;
-    QDockWidget *dockWidget_left;
-    QWidget *dockWidgetContents_left;
+    QDockWidget *dockWidget_task;
+    QWidget *dockWidgetContents_task;
+    QVBoxLayout *verticalLayout;
+    QLabel *label_2;
+    QFrame *frame_threshold;
+    QVBoxLayout *verticalLayout_5;
+    QCheckBox *checkBox_threshold;
+    QLabel *label_3;
+    QHBoxLayout *horizontalLayout_level;
+    QRadioButton *radioButton_level;
+    QSlider *horizontalSlider_level;
+    QHBoxLayout *horizontalLayout_auto;
+    QRadioButton *radioButton_auto;
+    QSlider *horizontalSlider_auto;
+    QHBoxLayout *horizontalLayout_peak;
+    QRadioButton *radioButton_peak;
+    QSlider *horizontalSlider_peak;
+    QHBoxLayout *horizontalLayout_history;
+    QRadioButton *radioButton_history;
+    QSlider *horizontalSlider_history;
+    QFrame *line_threshold;
+    QLabel *label_task_list;
+    QFrame *frame_task_list;
+    QVBoxLayout *verticalLayout_4;
+    QListWidget *listWidget_task;
+    QHBoxLayout *horizontalLayout_task_btn;
+    QPushButton *btn_task_modify;
+    QPushButton *btn_task_add;
+    QPushButton *btn_task_delete;
     QStackedWidget *stackedWidget;
     QWidget *page_1;
     QVBoxLayout *verticalLayout_2;
@@ -85,7 +117,7 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
-        MainWindow->resize(1600, 800);
+        MainWindow->resize(1500, 800);
         MainWindow->setStyleSheet(QString::fromUtf8("background-color: rgb(13, 18, 31);\n"
 "color: rgb(220, 220, 220);"));
         centralwidget = new QWidget(MainWindow);
@@ -167,16 +199,177 @@ public:
         horizontalLayout_4->setSpacing(0);
         horizontalLayout_4->setObjectName(QString::fromUtf8("horizontalLayout_4"));
         horizontalLayout_4->setContentsMargins(0, 0, 0, 0);
-        dockWidget_left = new QDockWidget(main_widget);
-        dockWidget_left->setObjectName(QString::fromUtf8("dockWidget_left"));
-        dockWidget_left->setMaximumSize(QSize(300, 524287));
-        dockWidget_left->setStyleSheet(QString::fromUtf8("background-color: rgb(60, 63, 65);\n"
+        dockWidget_task = new QDockWidget(main_widget);
+        dockWidget_task->setObjectName(QString::fromUtf8("dockWidget_task"));
+        dockWidget_task->setMaximumSize(QSize(300, 524287));
+        dockWidget_task->setStyleSheet(QString::fromUtf8("background-color: rgb(60, 63, 65);\n"
 "background-color: rgb(20, 28, 36);"));
-        dockWidgetContents_left = new QWidget();
-        dockWidgetContents_left->setObjectName(QString::fromUtf8("dockWidgetContents_left"));
-        dockWidget_left->setWidget(dockWidgetContents_left);
+        dockWidgetContents_task = new QWidget();
+        dockWidgetContents_task->setObjectName(QString::fromUtf8("dockWidgetContents_task"));
+        verticalLayout = new QVBoxLayout(dockWidgetContents_task);
+        verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
+        label_2 = new QLabel(dockWidgetContents_task);
+        label_2->setObjectName(QString::fromUtf8("label_2"));
 
-        horizontalLayout_4->addWidget(dockWidget_left);
+        verticalLayout->addWidget(label_2);
+
+        frame_threshold = new QFrame(dockWidgetContents_task);
+        frame_threshold->setObjectName(QString::fromUtf8("frame_threshold"));
+        frame_threshold->setStyleSheet(QString::fromUtf8("background-color: rgb(42, 52, 65);"));
+        frame_threshold->setFrameShape(QFrame::WinPanel);
+        frame_threshold->setFrameShadow(QFrame::Sunken);
+        frame_threshold->setLineWidth(1);
+        verticalLayout_5 = new QVBoxLayout(frame_threshold);
+        verticalLayout_5->setObjectName(QString::fromUtf8("verticalLayout_5"));
+        checkBox_threshold = new QCheckBox(frame_threshold);
+        checkBox_threshold->setObjectName(QString::fromUtf8("checkBox_threshold"));
+
+        verticalLayout_5->addWidget(checkBox_threshold);
+
+        label_3 = new QLabel(frame_threshold);
+        label_3->setObjectName(QString::fromUtf8("label_3"));
+
+        verticalLayout_5->addWidget(label_3);
+
+        horizontalLayout_level = new QHBoxLayout();
+        horizontalLayout_level->setObjectName(QString::fromUtf8("horizontalLayout_level"));
+        radioButton_level = new QRadioButton(frame_threshold);
+        radioButton_level->setObjectName(QString::fromUtf8("radioButton_level"));
+        radioButton_level->setMinimumSize(QSize(100, 0));
+
+        horizontalLayout_level->addWidget(radioButton_level);
+
+        horizontalSlider_level = new QSlider(frame_threshold);
+        horizontalSlider_level->setObjectName(QString::fromUtf8("horizontalSlider_level"));
+        horizontalSlider_level->setMinimum(-100);
+        horizontalSlider_level->setMaximum(100);
+        horizontalSlider_level->setOrientation(Qt::Horizontal);
+        horizontalSlider_level->setTickPosition(QSlider::TicksBelow);
+
+        horizontalLayout_level->addWidget(horizontalSlider_level);
+
+
+        verticalLayout_5->addLayout(horizontalLayout_level);
+
+        horizontalLayout_auto = new QHBoxLayout();
+        horizontalLayout_auto->setObjectName(QString::fromUtf8("horizontalLayout_auto"));
+        radioButton_auto = new QRadioButton(frame_threshold);
+        radioButton_auto->setObjectName(QString::fromUtf8("radioButton_auto"));
+        radioButton_auto->setMinimumSize(QSize(100, 0));
+
+        horizontalLayout_auto->addWidget(radioButton_auto);
+
+        horizontalSlider_auto = new QSlider(frame_threshold);
+        horizontalSlider_auto->setObjectName(QString::fromUtf8("horizontalSlider_auto"));
+        horizontalSlider_auto->setMinimum(-100);
+        horizontalSlider_auto->setMaximum(100);
+        horizontalSlider_auto->setOrientation(Qt::Horizontal);
+        horizontalSlider_auto->setTickPosition(QSlider::TicksBelow);
+
+        horizontalLayout_auto->addWidget(horizontalSlider_auto);
+
+
+        verticalLayout_5->addLayout(horizontalLayout_auto);
+
+        horizontalLayout_peak = new QHBoxLayout();
+        horizontalLayout_peak->setObjectName(QString::fromUtf8("horizontalLayout_peak"));
+        radioButton_peak = new QRadioButton(frame_threshold);
+        radioButton_peak->setObjectName(QString::fromUtf8("radioButton_peak"));
+        radioButton_peak->setMinimumSize(QSize(100, 0));
+
+        horizontalLayout_peak->addWidget(radioButton_peak);
+
+        horizontalSlider_peak = new QSlider(frame_threshold);
+        horizontalSlider_peak->setObjectName(QString::fromUtf8("horizontalSlider_peak"));
+        horizontalSlider_peak->setMinimum(-100);
+        horizontalSlider_peak->setMaximum(100);
+        horizontalSlider_peak->setOrientation(Qt::Horizontal);
+        horizontalSlider_peak->setTickPosition(QSlider::TicksBelow);
+
+        horizontalLayout_peak->addWidget(horizontalSlider_peak);
+
+
+        verticalLayout_5->addLayout(horizontalLayout_peak);
+
+        horizontalLayout_history = new QHBoxLayout();
+        horizontalLayout_history->setObjectName(QString::fromUtf8("horizontalLayout_history"));
+        radioButton_history = new QRadioButton(frame_threshold);
+        radioButton_history->setObjectName(QString::fromUtf8("radioButton_history"));
+        radioButton_history->setMinimumSize(QSize(100, 0));
+
+        horizontalLayout_history->addWidget(radioButton_history);
+
+        horizontalSlider_history = new QSlider(frame_threshold);
+        horizontalSlider_history->setObjectName(QString::fromUtf8("horizontalSlider_history"));
+        horizontalSlider_history->setMinimum(-100);
+        horizontalSlider_history->setMaximum(100);
+        horizontalSlider_history->setOrientation(Qt::Horizontal);
+        horizontalSlider_history->setTickPosition(QSlider::TicksBelow);
+
+        horizontalLayout_history->addWidget(horizontalSlider_history);
+
+
+        verticalLayout_5->addLayout(horizontalLayout_history);
+
+
+        verticalLayout->addWidget(frame_threshold);
+
+        line_threshold = new QFrame(dockWidgetContents_task);
+        line_threshold->setObjectName(QString::fromUtf8("line_threshold"));
+        line_threshold->setFrameShape(QFrame::HLine);
+        line_threshold->setFrameShadow(QFrame::Sunken);
+
+        verticalLayout->addWidget(line_threshold);
+
+        label_task_list = new QLabel(dockWidgetContents_task);
+        label_task_list->setObjectName(QString::fromUtf8("label_task_list"));
+
+        verticalLayout->addWidget(label_task_list);
+
+        frame_task_list = new QFrame(dockWidgetContents_task);
+        frame_task_list->setObjectName(QString::fromUtf8("frame_task_list"));
+        frame_task_list->setStyleSheet(QString::fromUtf8("background-color: rgb(42, 52, 65);"));
+        frame_task_list->setFrameShape(QFrame::WinPanel);
+        frame_task_list->setFrameShadow(QFrame::Sunken);
+        verticalLayout_4 = new QVBoxLayout(frame_task_list);
+        verticalLayout_4->setObjectName(QString::fromUtf8("verticalLayout_4"));
+        listWidget_task = new QListWidget(frame_task_list);
+        new QListWidgetItem(listWidget_task);
+        new QListWidgetItem(listWidget_task);
+        listWidget_task->setObjectName(QString::fromUtf8("listWidget_task"));
+        listWidget_task->setFrameShape(QFrame::Box);
+        listWidget_task->setFrameShadow(QFrame::Sunken);
+        listWidget_task->setLineWidth(2);
+        listWidget_task->setMidLineWidth(0);
+
+        verticalLayout_4->addWidget(listWidget_task);
+
+        horizontalLayout_task_btn = new QHBoxLayout();
+        horizontalLayout_task_btn->setObjectName(QString::fromUtf8("horizontalLayout_task_btn"));
+        btn_task_modify = new QPushButton(frame_task_list);
+        btn_task_modify->setObjectName(QString::fromUtf8("btn_task_modify"));
+
+        horizontalLayout_task_btn->addWidget(btn_task_modify);
+
+        btn_task_add = new QPushButton(frame_task_list);
+        btn_task_add->setObjectName(QString::fromUtf8("btn_task_add"));
+
+        horizontalLayout_task_btn->addWidget(btn_task_add);
+
+        btn_task_delete = new QPushButton(frame_task_list);
+        btn_task_delete->setObjectName(QString::fromUtf8("btn_task_delete"));
+
+        horizontalLayout_task_btn->addWidget(btn_task_delete);
+
+
+        verticalLayout_4->addLayout(horizontalLayout_task_btn);
+
+
+        verticalLayout->addWidget(frame_task_list);
+
+        dockWidget_task->setWidget(dockWidgetContents_task);
+
+        horizontalLayout_4->addWidget(dockWidget_task);
 
         stackedWidget = new QStackedWidget(main_widget);
         stackedWidget->setObjectName(QString::fromUtf8("stackedWidget"));
@@ -332,7 +525,7 @@ public:
         MainWindow->setStatusBar(statusbar);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName(QString::fromUtf8("menubar"));
-        menubar->setGeometry(QRect(0, 0, 1600, 23));
+        menubar->setGeometry(QRect(0, 0, 1500, 23));
         MainWindow->setMenuBar(menubar);
 
         retranslateUi(MainWindow);
@@ -351,6 +544,27 @@ public:
         btn_max->setText(QCoreApplication::translate("MainWindow", "max", nullptr));
         btn_close->setText(QString());
         pushButton_about->setText(QCoreApplication::translate("MainWindow", "about", nullptr));
+        dockWidget_task->setWindowTitle(QCoreApplication::translate("MainWindow", "\344\273\273\345\212\241\351\235\242\346\235\277", nullptr));
+        label_2->setText(QCoreApplication::translate("MainWindow", "\351\227\250\351\231\220\345\210\222\345\210\206\346\226\271\345\274\217", nullptr));
+        checkBox_threshold->setText(QCoreApplication::translate("MainWindow", "\347\273\230\345\210\266\345\210\260\345\233\276\344\270\212", nullptr));
+        label_3->setText(QString());
+        radioButton_level->setText(QCoreApplication::translate("MainWindow", "\346\260\264\345\271\263\351\230\210\345\200\274", nullptr));
+        radioButton_auto->setText(QCoreApplication::translate("MainWindow", "\350\207\252 \351\200\202 \345\272\224", nullptr));
+        radioButton_peak->setText(QCoreApplication::translate("MainWindow", "\345\256\236\346\227\266\345\263\260\345\200\274", nullptr));
+        radioButton_history->setText(QCoreApplication::translate("MainWindow", "\345\216\206\345\217\262\346\225\260\346\215\256", nullptr));
+        label_task_list->setText(QCoreApplication::translate("MainWindow", "\344\273\273\345\212\241\345\210\227\350\241\250", nullptr));
+
+        const bool __sortingEnabled = listWidget_task->isSortingEnabled();
+        listWidget_task->setSortingEnabled(false);
+        QListWidgetItem *___qlistwidgetitem = listWidget_task->item(0);
+        ___qlistwidgetitem->setText(QCoreApplication::translate("MainWindow", "test_1", nullptr));
+        QListWidgetItem *___qlistwidgetitem1 = listWidget_task->item(1);
+        ___qlistwidgetitem1->setText(QCoreApplication::translate("MainWindow", "test_2", nullptr));
+        listWidget_task->setSortingEnabled(__sortingEnabled);
+
+        btn_task_modify->setText(QCoreApplication::translate("MainWindow", "\344\277\256\346\224\271", nullptr));
+        btn_task_add->setText(QCoreApplication::translate("MainWindow", "\346\267\273\345\212\240", nullptr));
+        btn_task_delete->setText(QCoreApplication::translate("MainWindow", "\345\210\240\351\231\244", nullptr));
         label_page_2->setText(QCoreApplication::translate("MainWindow", "label_page_2", nullptr));
         dockWidget_ctrl->setWindowTitle(QCoreApplication::translate("MainWindow", "\346\216\247\345\210\266\351\235\242\346\235\277", nullptr));
         label_devices->setText(QCoreApplication::translate("MainWindow", "\350\256\276\345\244\207\351\200\211\346\213\251", nullptr));

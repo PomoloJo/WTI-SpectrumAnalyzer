@@ -27,10 +27,17 @@ private:
     Ui::MainWindow *ui;
 
     CWorkThread* m_p_work_thread;
-    QStatusBar* m_status_bar;
+    //QStatusBar* m_status_bar;
     QLabel* m_mouse_coordinate;
-    bool is_first_time_to_replot{ true };
+    // 记录要绘制的点数
+    int m_point_num;
+    double m_center_freq;
+    double m_bw;
+    double m_rbw;
+    double m_vbw;
+    double m_sweep_time;
 
+    bool is_first_time_to_replot{ true };
     void initUi();
     void initMember();
 

@@ -9,6 +9,8 @@ MainWindow::MainWindow(QWidget *parent) :
     this->initUi();
     this->initMember();
 
+    m_point_num = 0;
+
     // 去除系统带的标题栏
     setWindowFlags(Qt::FramelessWindowHint | windowFlags());
     // 安装事件过滤器，this监控title_widget实现鼠标拖拽标题栏
@@ -65,6 +67,8 @@ void MainWindow::initUi()
     ui->widget_plot->yAxis->setRangeUpper(0);
     ui->widget_plot->yAxis->setRangeLower(-100);
     ui->widget_plot->xAxis->setNumberFormat("ebc");
+
+    ui->frame_task_list->setWindowTitle("123");
 }
 
 void MainWindow::initMember()
@@ -274,8 +278,13 @@ bool MainWindow::eventFilter(QObject* target, QEvent* event)
 
                 pos_x = ui->widget_plot->xAxis->pixelToCoord(mouse_event->pos().x());
                 pos_y = ui->widget_plot->yAxis->pixelToCoord(mouse_event->pos().y());
-                //qDebug() << pos_x << ", " << pos_y;
-                m_mouse_coordinate->setText(QString("%1,   %2 dBm").arg(pos_x).arg(pos_y));
+                if (m_point_num != 0 && m_center_freq != 0 && m_bw != 0)
+                {
+                    pos_x = (pos_x / m_point_num * m_bw + m_center_freq - m_bw / 2) * 1000000;
+                    m_mouse_coordinate->setText(QString("%1 Hz,   %2 dBm").arg(pos_x).arg(pos_y));
+                }
+                else
+                    m_mouse_coordinate->setText(QString("%1 points,   %2 dBm").arg(pos_x).arg(pos_y));
                 break;
             }
             default:
@@ -301,11 +310,12 @@ void MainWindow::on_btn_start_clicked()
         PROCESS_INFORMATION pi;
         memset(&pi, 0, sizeof(PROCESS_INFORMATION));
 
-        auto freq = ui->doubleSpinBox_freq->value();
-        auto bw = ui->doubleSpinBox_bw->value();
-        auto rbw = ui->doubleSpinBox_rbw->value();
-        auto vbw = ui->doubleSpinBox_vbw->value();
-        auto sweep_time = 0.001;
+        m_center_freq = ui->doubleSpinBox_freq->value();
+        m_bw = ui->doubleSpinBox_bw->value();
+        m_rbw = ui->doubleSpinBox_rbw->value();
+        m_vbw = ui->doubleSpinBox_vbw->value();
+        m_sweep_time = 0.001;
+        
         QString cmdline_str;
         //cmdline_str.sprintf("device_driver\\bb60c\\bb60c.exe %fe6 %fe6 %fe3 %fe3 %f", freq, bw, rbw, vbw, sweep_time);
         cmdline_str.sprintf("device_driver\\fake_data.exe");
@@ -386,6 +396,7 @@ void MainWindow::on_btn_close_clicked()
 
 void MainWindow::timeToReplot(const double* recv_data, const int point_num)
 {
+    m_point_num = point_num;
     QCustomPlot* p_custom_plot = ui->widget_plot;
     static int old_point_num{};
     static QVector<double> x;
