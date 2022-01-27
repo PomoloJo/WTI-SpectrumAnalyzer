@@ -97,7 +97,7 @@ bool MainWindow::eventFilter(QObject* target, QEvent* event)
     QMouseEvent* mouse_event = (QMouseEvent*)event;
 
     // 当目标是右上角button
-    // 这里不要 return true，直接 break。return 会把事件截掉，除非后续触发的操作比如关闭事件也手动写上
+    // 这里不要 return，直接 break。  return 会把事件截掉，除非后续触发的操作比如关闭事件也手动写上
     if (ui->btn_close == target)
     {
         switch (event->type()) 
@@ -308,7 +308,7 @@ void MainWindow::on_btn_start_clicked()
         auto sweep_time = 0.001;
         QString cmdline_str;
         //cmdline_str.sprintf("device_driver\\bb60c\\bb60c.exe %fe6 %fe6 %fe3 %fe3 %f", freq, bw, rbw, vbw, sweep_time);
-        cmdline_str.sprintf("device_driver\\bb60c\\fake_data.exe");
+        cmdline_str.sprintf("device_driver\\fake_data.exe");
         qDebug() <<cmdline_str;
         //WCHAR cmdline[] = L"device_driver\\bb60c\\bb60c.exe 1000.000000e6 100.000000e6 100e3 10e3 0.001";
         auto cmdline_temp = cmdline_str.toStdWString();
@@ -335,9 +335,9 @@ void MainWindow::on_btn_start_clicked()
 
         // 添加一条曲线
         QCPGraph* pgraph = p_custom_plot->addGraph();
-        // color:green
+        // line color:green
         // pgraph->setPen(QPen(QColor(16, 255, 32)));
-        // change color
+        // change line color
         QLinearGradient gradient(0, 100, 0, 500);
         gradient.setColorAt(0.3, QColor(16, 255, 32));
         gradient.setColorAt(0.6, QColor(32, 230, 128));
