@@ -540,8 +540,8 @@ public:
     {
         MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "MainWindow", nullptr));
         title_label->setText(QCoreApplication::translate("MainWindow", "TitleLabel", nullptr));
-        btn_min->setText(QCoreApplication::translate("MainWindow", "min", nullptr));
-        btn_max->setText(QCoreApplication::translate("MainWindow", "max", nullptr));
+        btn_min->setText(QString());
+        btn_max->setText(QString());
         btn_close->setText(QString());
         pushButton_about->setText(QCoreApplication::translate("MainWindow", "about", nullptr));
         dockWidget_task->setWindowTitle(QCoreApplication::translate("MainWindow", "\344\273\273\345\212\241\351\235\242\346\235\277", nullptr));

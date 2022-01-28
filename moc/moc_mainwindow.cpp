@@ -22,8 +22,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_MainWindow_t {
-    QByteArrayData data[9];
-    char stringdata0[111];
+    QByteArrayData data[11];
+    char stringdata0[149];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -38,13 +38,16 @@ QT_MOC_LITERAL(2, 23, 0), // ""
 QT_MOC_LITERAL(3, 24, 7), // "QEvent*"
 QT_MOC_LITERAL(4, 32, 20), // "on_btn_start_clicked"
 QT_MOC_LITERAL(5, 53, 20), // "on_btn_close_clicked"
-QT_MOC_LITERAL(6, 74, 12), // "timeToReplot"
-QT_MOC_LITERAL(7, 87, 13), // "const double*"
-QT_MOC_LITERAL(8, 101, 9) // "point_num"
+QT_MOC_LITERAL(6, 74, 18), // "on_btn_max_clicked"
+QT_MOC_LITERAL(7, 93, 18), // "on_btn_min_clicked"
+QT_MOC_LITERAL(8, 112, 12), // "timeToReplot"
+QT_MOC_LITERAL(9, 125, 13), // "const double*"
+QT_MOC_LITERAL(10, 139, 9) // "point_num"
 
     },
     "MainWindow\0eventFilter\0\0QEvent*\0"
     "on_btn_start_clicked\0on_btn_close_clicked\0"
+    "on_btn_max_clicked\0on_btn_min_clicked\0"
     "timeToReplot\0const double*\0point_num"
 };
 #undef QT_MOC_LITERAL
@@ -55,7 +58,7 @@ static const uint qt_meta_data_MainWindow[] = {
        8,       // revision
        0,       // classname
        0,    0, // classinfo
-       4,   14, // methods
+       6,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -63,16 +66,20 @@ static const uint qt_meta_data_MainWindow[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags
-       1,    2,   34,    2, 0x0a /* Public */,
-       4,    0,   39,    2, 0x08 /* Private */,
-       5,    0,   40,    2, 0x08 /* Private */,
-       6,    2,   41,    2, 0x08 /* Private */,
+       1,    2,   44,    2, 0x0a /* Public */,
+       4,    0,   49,    2, 0x08 /* Private */,
+       5,    0,   50,    2, 0x08 /* Private */,
+       6,    0,   51,    2, 0x08 /* Private */,
+       7,    0,   52,    2, 0x08 /* Private */,
+       8,    2,   53,    2, 0x08 /* Private */,
 
  // slots: parameters
     QMetaType::Bool, QMetaType::QObjectStar, 0x80000000 | 3,    2,    2,
     QMetaType::Void,
     QMetaType::Void,
-    QMetaType::Void, 0x80000000 | 7, QMetaType::Int,    2,    8,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void, 0x80000000 | 9, QMetaType::Int,    2,   10,
 
        0        // eod
 };
@@ -87,7 +94,9 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
             if (_a[0]) *reinterpret_cast< bool*>(_a[0]) = std::move(_r); }  break;
         case 1: _t->on_btn_start_clicked(); break;
         case 2: _t->on_btn_close_clicked(); break;
-        case 3: _t->timeToReplot((*reinterpret_cast< const double*(*)>(_a[1])),(*reinterpret_cast< const int(*)>(_a[2]))); break;
+        case 3: _t->on_btn_max_clicked(); break;
+        case 4: _t->on_btn_min_clicked(); break;
+        case 5: _t->timeToReplot((*reinterpret_cast< const double*(*)>(_a[1])),(*reinterpret_cast< const int(*)>(_a[2]))); break;
         default: ;
         }
     }
@@ -122,13 +131,13 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 4)
+        if (_id < 6)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 4;
+        _id -= 6;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 4)
+        if (_id < 6)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 4;
+        _id -= 6;
     }
     return _id;
 }

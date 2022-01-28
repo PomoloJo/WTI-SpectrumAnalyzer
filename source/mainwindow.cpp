@@ -21,6 +21,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // 右上角按钮事件过滤
     ui->btn_close->installEventFilter(this);
+    ui->btn_max->installEventFilter(this);
+    ui->btn_min->installEventFilter(this);
 
     // 工作线程，第二个参数是时间间隔，默认值0ms
     m_p_work_thread = new CWorkThread(this);
@@ -49,7 +51,9 @@ void MainWindow::initUi()
     ui->btn_min->setFlat(true);
      
     //ui->btn_close->setIcon(QIcon(":/icons/close.png")); // 该写法在vs中似乎无法生效
-    ui->btn_close->setIcon(QIcon("./resource/icons/close4.png"));
+    ui->btn_close->setIcon(QIcon("./resource/icons/close1.png"));
+    ui->btn_max->setIcon(QIcon("./resource/icons/max1.png"));
+    ui->btn_min->setIcon(QIcon("./resource/icons/min1.png"));
 
     // dark theme
     ui->widget_plot->setBackground(QColor(8, 8, 8));
@@ -106,28 +110,45 @@ bool MainWindow::eventFilter(QObject* target, QEvent* event)
     {
         switch (event->type()) 
         {
-            case QEvent::HoverEnter:
-            {
-                ui->btn_close->setIcon(QIcon("./resource/icons/close2.png"));
-                break;
-            }
-            case QEvent::HoverLeave:
-            {
-                ui->btn_close->setIcon(QIcon("./resource/icons/close4.png"));
-                break;
-            }
-            case QEvent::MouseButtonPress:
-            {
-                ui->btn_close->setIcon(QIcon("./resource/icons/close3.png"));
-                break;
-            }
-            case QEvent::MouseButtonRelease:
-            {
-                ui->btn_close->setIcon(QIcon("./resource/icons/close4.png"));
-                break;
-            }
-            default:
-                break;
+        case QEvent::HoverEnter:
+            ui->btn_close->setIcon(QIcon("./resource/icons/close2.png")); break;
+        case QEvent::HoverLeave:
+            ui->btn_close->setIcon(QIcon("./resource/icons/close1.png")); break;
+        case QEvent::MouseButtonPress:
+            ui->btn_close->setIcon(QIcon("./resource/icons/close3.png")); break;
+        case QEvent::MouseButtonRelease:
+            ui->btn_close->setIcon(QIcon("./resource/icons/close1.png")); break;
+        default: break;
+        }
+    }
+    if (ui->btn_max == target)
+    {
+        switch (event->type())
+        {
+        case QEvent::HoverEnter:
+            ui->btn_max->setIcon(QIcon("./resource/icons/max2.png")); break;
+        case QEvent::HoverLeave:
+            ui->btn_max->setIcon(QIcon("./resource/icons/max1.png")); break;
+        case QEvent::MouseButtonPress:
+            ui->btn_max->setIcon(QIcon("./resource/icons/max3.png")); break;
+        case QEvent::MouseButtonRelease:
+            ui->btn_max->setIcon(QIcon("./resource/icons/max1.png")); break;
+        default: break;
+        }
+    }
+    if (ui->btn_min == target)
+    {
+        switch (event->type())
+        {
+        case QEvent::HoverEnter:
+            ui->btn_min->setIcon(QIcon("./resource/icons/min2.png")); break;
+        case QEvent::HoverLeave:
+            ui->btn_min->setIcon(QIcon("./resource/icons/min1.png")); break;
+        case QEvent::MouseButtonPress:
+            ui->btn_min->setIcon(QIcon("./resource/icons/min3.png")); break;
+        case QEvent::MouseButtonRelease:
+            ui->btn_min->setIcon(QIcon("./resource/icons/min1.png")); break;
+        default: break;
         }
     }
 
@@ -392,6 +413,26 @@ void MainWindow::on_btn_close_clicked()
     }
     Sleep(500);
     this->close();
+}
+
+void MainWindow::on_btn_max_clicked()
+{
+    if (windowState() == Qt::WindowNoState)
+    {
+        //showFullScreen();
+        setWindowState(Qt::WindowMaximized);
+    }
+    else
+    {
+        //showNormal();
+        setWindowState(Qt::WindowNoState);
+    }
+}
+
+void MainWindow::on_btn_min_clicked()
+{
+    //showMinimized();
+    setWindowState(Qt::WindowMinimized);
 }
 
 void MainWindow::timeToReplot(const double* recv_data, const int point_num)
