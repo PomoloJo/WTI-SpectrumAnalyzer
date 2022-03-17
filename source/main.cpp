@@ -10,10 +10,6 @@ int main(int argc, char *argv[])
     QFont global_font("Arial", 10);
     a.setFont(global_font);
 
-
-
-
-
     MainWindow w;
     w.show();
 
