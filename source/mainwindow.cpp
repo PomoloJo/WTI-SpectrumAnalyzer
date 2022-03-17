@@ -1,5 +1,4 @@
 #include "./include/mainwindow.h"
-#include "./include/ui_mainwindow.h"
 
 MainWindow::MainWindow(QWidget* parent) :
     QMainWindow(parent),
@@ -30,6 +29,9 @@ MainWindow::MainWindow(QWidget* parent) :
     // 工作线程，第二个参数是时间间隔，默认值0ms
     m_p_work_thread = new CWorkThread(this, 500);
 
+    // AMC线程，第二个参数时间间隔，第三个参数是MainWindow对象地址
+    m_p_amc_thread = new CAmcThread(this, 0, this);
+
     // 添加状态栏
     m_mouse_coordinate = new QLabel("realtime mouse coordinate", this);
     // addWidget是从左往右添加, addPermanentWidget是从右往左添加
@@ -37,30 +39,18 @@ MainWindow::MainWindow(QWidget* parent) :
     ui->statusbar->addPermanentWidget(m_mouse_coordinate);
 
     connect(m_p_work_thread, &CWorkThread::sendData, this, &MainWindow::timeToReplot);
+    connect(m_p_amc_thread, &CAmcThread::sendResult, this, &MainWindow::showAmcResult);
 
     // 添加一条曲线作为实际数据曲线
     QCPGraph* pgraph = ui->widget_plot->addGraph();
     // 添加第二条曲线作为阈值曲线
     QCPGraph* threshold_graph = ui->widget_plot->addGraph();
-        
-    ui->tabWidget->setStyleSheet(
-        "QTabWidget::pane{ border:none; }\
-        QTabBar::tab { \
-            min-width:100px; \
-            color: gray; \
-            border-top-left-radius: 2px; \
-            border-top-right-radius: 2px; \
-            padding:2px;}\
-        QTabBar::tab:hover{ background:rgb(255, 255, 255, 100); }\
-        QTabBar::tab:!selected {margin-top: 0px;} \
-        QTabBar::tab:selected {color: white; background:rgb(40,50,60);}"
-    );
-    ui->tabWidget->setCurrentIndex(0);
 }
 
 MainWindow::~MainWindow()
 {
     delete m_p_work_thread;
+    delete m_p_amc_thread;
     delete ui;
 }
 
@@ -94,6 +84,32 @@ void MainWindow::initUi()
     ui->widget_plot->yAxis->setRangeLower(-100);
     ui->widget_plot->xAxis->setNumberFormat("ebc");
 
+    // amc_plot
+    ui->widget_plot_amc->setBackground(QColor(8, 8, 8));
+    ui->widget_plot_amc->xAxis->grid()->setPen(QPen(QColor(32, 32, 32), 1, Qt::PenStyle::DashLine));//网格线
+    ui->widget_plot_amc->yAxis->grid()->setPen(QPen(QColor(32, 32, 32), 1, Qt::PenStyle::DashLine));//网格线
+    ui->widget_plot_amc->xAxis->grid()->setSubGridPen(QPen(QColor(25, 25, 25), 1, Qt::DotLine));//子网格线
+    ui->widget_plot_amc->yAxis->grid()->setSubGridPen(QPen(QColor(25, 25, 25), 1, Qt::DotLine));//子网格线
+    ui->widget_plot_amc->xAxis->grid()->setSubGridVisible(true);//显示x轴子网格线
+    ui->widget_plot_amc->yAxis->grid()->setSubGridVisible(true);//显示y轴子网格线
+
+    // 设置tab样式
+    ui->tabWidget->setStyleSheet(
+        "QTabWidget::pane{ border:none; }\
+        QTabBar::tab { \
+            min-width:100px; \
+            color: gray; \
+            border-top-left-radius: 2px; \
+            border-top-right-radius: 2px; \
+            padding:2px;}\
+        QTabBar::tab:hover{ background:rgb(255, 255, 255, 100); }\
+        QTabBar::tab:!selected {margin-top: 0px;} \
+        QTabBar::tab:selected {color: white; background:rgb(40,50,60);}"
+    );
+    ui->tabWidget->setCurrentIndex(0);
+
+    // hide
+    ui->widget_amc->hide();
     ui->btn_history->hide();
 }
 
@@ -229,6 +245,13 @@ bool MainWindow::eventFilter(QObject* target, QEvent* event)
                     plot_x_range = ui->widget_plot->xAxis->range().size();
                     plot_y_range = ui->widget_plot->yAxis->range().size();
                     //qDebug() << "right x press" << total_plot_delta.x();
+                    break;
+                }
+                else if (mouse_event->buttons() == Qt::MidButton)
+                {
+                    ui->doubleSpinBox_amc_freq->setValue(pos_x);
+                    ui->textBrowser_amc->clear();
+                    memset(m_amc_result, 0, sizeof(m_amc_result));
                     break;
                 }
             }
@@ -640,50 +663,58 @@ void MainWindow::timeToReplot(const double* recv_data, const int point_num)
                 p_custom_plot->graph(1)->setData(x_data, y_slide);
                 break;
             }
+            // 应不应该把这部分数据处理放在主线程？
             case(PlotStatus::WITH_THRESHOLD_AUTO):
             {
-                QVector<double> y_used_for_auto(y_recv_copy.begin(), y_recv_copy.end());
-                int const_step = 25, const_step_2 = 50, const_step_3 = 200;
-                double tmp_value = m_slide_value;
-                int diff_1 = 12, diff_2 = 5, diff_3 = 8;
-                for (int i = 0; i < point_num; ++i)
+                int size = y_recv_copy.size();
+                // 欠采样倍率，为了把宽带信号拿出来，要进行高倍的下采样，后面再恢复
+                int scale_factor = 64;
+                int down_size = size / scale_factor;
+                QVector<double> y_tmp(down_size, 0);
+                QVector<double> y_tmp2(y_tmp);
+
+                for (int i = 0; i < size - scale_factor; )
                 {
-                    if (i < point_num - const_step)
+                    y_tmp[i / scale_factor] = y_recv_copy[i];
+                    i += scale_factor;
+                }
+
+                int const_step = 13, const_step_2 = 23;
+                double tmp_value = m_slide_value;
+                int diff_1 = 12, diff_2 = 5;
+
+                for (int i = 0; i < down_size; ++i)
+                {
+                    if (i < down_size - const_step)
                     {
                         if (!(i % const_step))
                         {
-                            double max = *std::max_element(y_recv_copy.begin() + i, y_recv_copy.begin() + i + const_step);
-                            double min = *std::min_element(y_recv_copy.begin() + i, y_recv_copy.begin() + i + const_step);
+                            double max = *std::max_element(y_tmp.begin() + i, y_tmp.begin() + i + const_step);
+                            double min = *std::min_element(y_tmp.begin() + i, y_tmp.begin() + i + const_step);
                             tmp_value = max - min > diff_1 ? min : ((max + min) / 2);
                         }
                     }
-                    y_line[i] = tmp_value + m_slide_value;
+                    y_tmp2[i] = tmp_value + m_slide_value;
                 }
-                for (int i = 0; i < point_num; ++i)
+                for (int i = 0; i < down_size; ++i)
                 {
-                    if (i < point_num - const_step_2)
+                    if (i < down_size - const_step_2)
                     {
                         if (!(i % const_step_2))
                         {
-                            double max = *std::max_element(y_line.begin() + i, y_line.begin() + i + const_step);
-                            double min = *std::min_element(y_line.begin() + i, y_line.begin() + i + const_step);
+                            double max = *std::max_element(y_tmp2.begin() + i, y_tmp2.begin() + i + const_step);
+                            double min = *std::min_element(y_tmp2.begin() + i, y_tmp2.begin() + i + const_step);
                             tmp_value = max - min > diff_2 ? min : ((max + min) / 2);
                         }
                     }
-                    y_used_for_auto[i] = tmp_value + m_slide_value;
+                    y_tmp[i] = tmp_value + m_slide_value;
                 }
-                for (int i = 0; i < point_num; ++i)
+                for (int i = 0; i < size; ++i)
                 {
-                    if (i < point_num - const_step_3)
-                    {
-                        if (!(i % const_step_3))
-                        {
-                            double max = *std::max_element(y_used_for_auto.begin() + i, y_used_for_auto.begin() + i + const_step);
-                            double min = *std::min_element(y_used_for_auto.begin() + i, y_used_for_auto.begin() + i + const_step);
-                            tmp_value = max - min > diff_3 ? min : ((max + min) / 2);
-                        }
-                    }
-                    y_line[i] = tmp_value + m_slide_value;
+                    if( i < size - scale_factor)
+                        y_line[i] = y_tmp[i / scale_factor];
+                    else
+                        y_line[i] = y_line[i - 1];
                 }
 
                 p_custom_plot->graph(0)->setData(x_data, y_recv_copy);
@@ -701,6 +732,35 @@ void MainWindow::timeToReplot(const double* recv_data, const int point_num)
     //重绘，应用所有更改的设置
     p_custom_plot->replot();
 }
+
+
+void MainWindow::showAmcResult(const int modulation)
+{
+    if (modulation == -1)
+    {
+        qDebug() << "AMC模块配置有误!";
+        return;
+    }
+    m_amc_result[modulation] += 1;
+    double sum = 0;
+    for (auto n : m_amc_result)
+    {
+        sum += n;
+    }
+    std::vector<QString> result_mod{ "AWGN", "BPSK", "QPSK", "8PSK", "16APSK", "OQPSK", "16QAM", "32QAM", "2FSK", "4FSK", "8FSK", "16FSK", "16PSK" };
+    if (sum > 0)
+    {
+        ui->textBrowser_amc->clear();
+        ui->textBrowser_amc->append("times: " + QString::number(sum));
+        for (int i = 0; i < 13; ++i)
+        {
+            if (m_amc_result[i])
+                ui->textBrowser_amc->append(result_mod[i] + "   " + QString::number(m_amc_result[i] * 100.0 / sum) + "%");
+        }
+    }
+}
+
+
 
 // 滑块与spinbox关联
 void MainWindow::on_horizontalSlider_offset_valueChanged(int slider_value)
@@ -749,6 +809,22 @@ void MainWindow::on_btn_history_clicked()
             in >> y_line;
             file.close();
         }
+    }
+}
+
+void MainWindow::on_btn_amc_clicked()
+{
+    if (ui->widget_amc->isVisible())
+    {
+        ui->widget_amc->hide();
+        m_p_amc_thread->stopRunning();
+    }
+    else
+    {
+        memset(m_amc_result, 0, sizeof(m_amc_result));
+        ui->textBrowser_amc->clear();
+        ui->widget_amc->show();
+        m_p_amc_thread->start();
     }
 }
 

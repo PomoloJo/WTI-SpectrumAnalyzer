@@ -3,10 +3,11 @@
 #define MAINWINDOW_H_
 
 #include <QMainWindow>
-#include "CWorkThread.h"
 #include <QtWidgets/QLabel>
 #include <iostream>
-
+#include "ui_mainwindow.h"
+#include "CWorkThread.h"
+#include "CAmcThread.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -20,6 +21,9 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+    double getAmcFreq() { return ui->doubleSpinBox_amc_freq->value(); }
+    double getAmcBw() { return ui->doubleSpinBox_amc_bw->value(); }
+
 public slots:
     bool eventFilter(QObject*, QEvent*);
 
@@ -27,6 +31,8 @@ private:
     Ui::MainWindow *ui;
 
     CWorkThread* m_p_work_thread;
+    CAmcThread* m_p_amc_thread;
+
     //QStatusBar* m_status_bar;
     QLabel* m_mouse_coordinate;
     // 接收数据的地址
@@ -62,6 +68,9 @@ private:
     // 记录阈值曲线slide偏移
     int m_slide_value;
 
+    // 记录AMC返回记录
+    int m_amc_result[13];
+
     // functions
     void initUi();
     void initMember();
@@ -83,7 +92,9 @@ private slots:
     void on_radioButton_peak_clicked() { plotStatusChange(); }
     void on_radioButton_history_clicked() { plotStatusChange(); }  
     void on_btn_history_clicked();
+    void on_btn_amc_clicked();
 
     void timeToReplot(const double*, const int point_num);
+    void showAmcResult(const int modulation);
 };
 #endif // MAINWINDOW_H_

@@ -51,7 +51,8 @@ public:
     QPushButton *btn_close;
     QWidget *menu_widget;
     QHBoxLayout *horizontalLayout_2;
-    QPushButton *pushButton_about;
+    QPushButton *btn_about;
+    QPushButton *btn_amc;
     QSpacerItem *horizontalSpacer_menu;
     QWidget *main_widget;
     QHBoxLayout *horizontalLayout_3;
@@ -85,8 +86,21 @@ public:
     QPushButton *btn_task_delete;
     QStackedWidget *stackedWidget;
     QWidget *page_1;
-    QVBoxLayout *verticalLayout_2;
+    QVBoxLayout *verticalLayout_7;
+    QVBoxLayout *verticalLayout_page1;
     QCustomPlot *widget_plot;
+    QWidget *widget_amc;
+    QHBoxLayout *horizontalLayout_4;
+    QVBoxLayout *verticalLayout_amc;
+    QHBoxLayout *horizontalLayout_amc_freq;
+    QLabel *label_amc_freq;
+    QDoubleSpinBox *doubleSpinBox_amc_freq;
+    QHBoxLayout *horizontalLayout_amc_bw;
+    QLabel *label_amc_bw;
+    QDoubleSpinBox *doubleSpinBox_amc_bw;
+    QSpacerItem *verticalSpacer_amc;
+    QCustomPlot *widget_plot_amc;
+    QTextBrowser *textBrowser_amc;
     QWidget *page_2;
     QLabel *label_page_2;
     QTabWidget *tabWidget;
@@ -100,7 +114,7 @@ public:
     QLabel *label_devices;
     QComboBox *comboBox_devices;
     QHBoxLayout *horizontalLayout_freq;
-    QLabel *label;
+    QLabel *label_freq;
     QDoubleSpinBox *doubleSpinBox_freq;
     QHBoxLayout *horizontalLayout_bw;
     QLabel *label_bw;
@@ -188,10 +202,15 @@ public:
         horizontalLayout_2->setSpacing(0);
         horizontalLayout_2->setObjectName(QString::fromUtf8("horizontalLayout_2"));
         horizontalLayout_2->setContentsMargins(0, 0, 0, 0);
-        pushButton_about = new QPushButton(menu_widget);
-        pushButton_about->setObjectName(QString::fromUtf8("pushButton_about"));
+        btn_about = new QPushButton(menu_widget);
+        btn_about->setObjectName(QString::fromUtf8("btn_about"));
 
-        horizontalLayout_2->addWidget(pushButton_about);
+        horizontalLayout_2->addWidget(btn_about);
+
+        btn_amc = new QPushButton(menu_widget);
+        btn_amc->setObjectName(QString::fromUtf8("btn_amc"));
+
+        horizontalLayout_2->addWidget(btn_amc);
 
         horizontalSpacer_menu = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
@@ -369,14 +388,81 @@ public:
         stackedWidget->setObjectName(QString::fromUtf8("stackedWidget"));
         page_1 = new QWidget();
         page_1->setObjectName(QString::fromUtf8("page_1"));
-        verticalLayout_2 = new QVBoxLayout(page_1);
-        verticalLayout_2->setSpacing(2);
-        verticalLayout_2->setObjectName(QString::fromUtf8("verticalLayout_2"));
-        verticalLayout_2->setContentsMargins(2, 2, 2, 2);
+        verticalLayout_7 = new QVBoxLayout(page_1);
+        verticalLayout_7->setSpacing(2);
+        verticalLayout_7->setObjectName(QString::fromUtf8("verticalLayout_7"));
+        verticalLayout_7->setContentsMargins(2, 2, 2, 2);
+        verticalLayout_page1 = new QVBoxLayout();
+        verticalLayout_page1->setSpacing(2);
+        verticalLayout_page1->setObjectName(QString::fromUtf8("verticalLayout_page1"));
         widget_plot = new QCustomPlot(page_1);
         widget_plot->setObjectName(QString::fromUtf8("widget_plot"));
 
-        verticalLayout_2->addWidget(widget_plot);
+        verticalLayout_page1->addWidget(widget_plot);
+
+        widget_amc = new QWidget(page_1);
+        widget_amc->setObjectName(QString::fromUtf8("widget_amc"));
+        widget_amc->setMaximumSize(QSize(16777215, 250));
+        widget_amc->setStyleSheet(QString::fromUtf8("background-color: rgb(40, 50, 60);"));
+        horizontalLayout_4 = new QHBoxLayout(widget_amc);
+        horizontalLayout_4->setObjectName(QString::fromUtf8("horizontalLayout_4"));
+        verticalLayout_amc = new QVBoxLayout();
+        verticalLayout_amc->setObjectName(QString::fromUtf8("verticalLayout_amc"));
+        horizontalLayout_amc_freq = new QHBoxLayout();
+        horizontalLayout_amc_freq->setObjectName(QString::fromUtf8("horizontalLayout_amc_freq"));
+        label_amc_freq = new QLabel(widget_amc);
+        label_amc_freq->setObjectName(QString::fromUtf8("label_amc_freq"));
+
+        horizontalLayout_amc_freq->addWidget(label_amc_freq);
+
+        doubleSpinBox_amc_freq = new QDoubleSpinBox(widget_amc);
+        doubleSpinBox_amc_freq->setObjectName(QString::fromUtf8("doubleSpinBox_amc_freq"));
+        doubleSpinBox_amc_freq->setMaximum(100000.000000000000000);
+
+        horizontalLayout_amc_freq->addWidget(doubleSpinBox_amc_freq);
+
+
+        verticalLayout_amc->addLayout(horizontalLayout_amc_freq);
+
+        horizontalLayout_amc_bw = new QHBoxLayout();
+        horizontalLayout_amc_bw->setObjectName(QString::fromUtf8("horizontalLayout_amc_bw"));
+        label_amc_bw = new QLabel(widget_amc);
+        label_amc_bw->setObjectName(QString::fromUtf8("label_amc_bw"));
+
+        horizontalLayout_amc_bw->addWidget(label_amc_bw);
+
+        doubleSpinBox_amc_bw = new QDoubleSpinBox(widget_amc);
+        doubleSpinBox_amc_bw->setObjectName(QString::fromUtf8("doubleSpinBox_amc_bw"));
+        doubleSpinBox_amc_bw->setMaximum(100000.000000000000000);
+
+        horizontalLayout_amc_bw->addWidget(doubleSpinBox_amc_bw);
+
+
+        verticalLayout_amc->addLayout(horizontalLayout_amc_bw);
+
+        verticalSpacer_amc = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+
+        verticalLayout_amc->addItem(verticalSpacer_amc);
+
+
+        horizontalLayout_4->addLayout(verticalLayout_amc);
+
+        widget_plot_amc = new QCustomPlot(widget_amc);
+        widget_plot_amc->setObjectName(QString::fromUtf8("widget_plot_amc"));
+        widget_plot_amc->setMinimumSize(QSize(300, 0));
+
+        horizontalLayout_4->addWidget(widget_plot_amc);
+
+        textBrowser_amc = new QTextBrowser(widget_amc);
+        textBrowser_amc->setObjectName(QString::fromUtf8("textBrowser_amc"));
+
+        horizontalLayout_4->addWidget(textBrowser_amc);
+
+
+        verticalLayout_page1->addWidget(widget_amc);
+
+
+        verticalLayout_7->addLayout(verticalLayout_page1);
 
         stackedWidget->addWidget(page_1);
         page_2 = new QWidget();
@@ -428,10 +514,10 @@ public:
 
         horizontalLayout_freq = new QHBoxLayout();
         horizontalLayout_freq->setObjectName(QString::fromUtf8("horizontalLayout_freq"));
-        label = new QLabel(dockWidgetContents_ctrl);
-        label->setObjectName(QString::fromUtf8("label"));
+        label_freq = new QLabel(dockWidgetContents_ctrl);
+        label_freq->setObjectName(QString::fromUtf8("label_freq"));
 
-        horizontalLayout_freq->addWidget(label);
+        horizontalLayout_freq->addWidget(label_freq);
 
         doubleSpinBox_freq = new QDoubleSpinBox(dockWidgetContents_ctrl);
         doubleSpinBox_freq->setObjectName(QString::fromUtf8("doubleSpinBox_freq"));
@@ -561,7 +647,8 @@ public:
         btn_min->setText(QString());
         btn_max->setText(QString());
         btn_close->setText(QString());
-        pushButton_about->setText(QCoreApplication::translate("MainWindow", "about", nullptr));
+        btn_about->setText(QCoreApplication::translate("MainWindow", "ABOUT", nullptr));
+        btn_amc->setText(QCoreApplication::translate("MainWindow", "AMC", nullptr));
         dockWidget_task->setWindowTitle(QCoreApplication::translate("MainWindow", "\344\273\273\345\212\241\351\235\242\346\235\277", nullptr));
         label_2->setText(QCoreApplication::translate("MainWindow", "\351\227\250\351\231\220\345\210\222\345\210\206\346\226\271\345\274\217", nullptr));
         checkBox_threshold->setText(QCoreApplication::translate("MainWindow", "\347\273\230\345\210\266\345\210\260\345\233\276\344\270\212", nullptr));
@@ -586,12 +673,14 @@ public:
         btn_task_modify->setText(QCoreApplication::translate("MainWindow", "\344\277\256\346\224\271", nullptr));
         btn_task_add->setText(QCoreApplication::translate("MainWindow", "\346\267\273\345\212\240", nullptr));
         btn_task_delete->setText(QCoreApplication::translate("MainWindow", "\345\210\240\351\231\244", nullptr));
+        label_amc_freq->setText(QCoreApplication::translate("MainWindow", "\344\270\255\345\277\203\351\242\221\347\202\271(MHz)", nullptr));
+        label_amc_bw->setText(QCoreApplication::translate("MainWindow", "\345\270\246\345\256\275(Mhz)", nullptr));
         label_page_2->setText(QCoreApplication::translate("MainWindow", "label_page_2", nullptr));
         dockWidget_ctrl->setWindowTitle(QCoreApplication::translate("MainWindow", "\346\216\247\345\210\266\351\235\242\346\235\277", nullptr));
         label_devices->setText(QCoreApplication::translate("MainWindow", "\350\256\276\345\244\207\351\200\211\346\213\251", nullptr));
         comboBox_devices->setItemText(0, QCoreApplication::translate("MainWindow", "bb60c", nullptr));
 
-        label->setText(QCoreApplication::translate("MainWindow", "\344\270\255\345\277\203\351\242\221\347\202\271(MHz)", nullptr));
+        label_freq->setText(QCoreApplication::translate("MainWindow", "\344\270\255\345\277\203\351\242\221\347\202\271(MHz)", nullptr));
         label_bw->setText(QCoreApplication::translate("MainWindow", "\345\270\246\345\256\275(Mhz)", nullptr));
         label_rbw->setText(QCoreApplication::translate("MainWindow", "RBW(kHz)", nullptr));
         label_vbw->setText(QCoreApplication::translate("MainWindow", "VBW(kHz)", nullptr));

@@ -167,9 +167,16 @@ background-color: rgb(20, 28, 36);</string>
         <number>0</number>
        </property>
        <item>
-        <widget class="QPushButton" name="pushButton_about">
+        <widget class="QPushButton" name="btn_about">
          <property name="text">
-          <string>about</string>
+          <string>ABOUT</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btn_amc">
+         <property name="text">
+          <string>AMC</string>
          </property>
         </widget>
        </item>
@@ -468,7 +475,7 @@ background-color: rgb(20, 28, 36);</string>
           <number>0</number>
          </property>
          <widget class="QWidget" name="page_1">
-          <layout class="QVBoxLayout" name="verticalLayout_2">
+          <layout class="QVBoxLayout" name="verticalLayout_7">
            <property name="spacing">
             <number>2</number>
            </property>
@@ -485,7 +492,95 @@ background-color: rgb(20, 28, 36);</string>
             <number>2</number>
            </property>
            <item>
-            <widget class="QCustomPlot" name="widget_plot" native="true"/>
+            <layout class="QVBoxLayout" name="verticalLayout_page1">
+             <property name="spacing">
+              <number>2</number>
+             </property>
+             <item>
+              <widget class="QCustomPlot" name="widget_plot" native="true"/>
+             </item>
+             <item>
+              <widget class="QWidget" name="widget_amc" native="true">
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>250</height>
+                </size>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">background-color: rgb(40, 50, 60);</string>
+               </property>
+               <layout class="QHBoxLayout" name="horizontalLayout_4">
+                <item>
+                 <layout class="QVBoxLayout" name="verticalLayout_amc">
+                  <item>
+                   <layout class="QHBoxLayout" name="horizontalLayout_amc_freq">
+                    <item>
+                     <widget class="QLabel" name="label_amc_freq">
+                      <property name="text">
+                       <string>中心频点(MHz)</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QDoubleSpinBox" name="doubleSpinBox_amc_freq">
+                      <property name="maximum">
+                       <double>100000.000000000000000</double>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="horizontalLayout_amc_bw">
+                    <item>
+                     <widget class="QLabel" name="label_amc_bw">
+                      <property name="text">
+                       <string>带宽(Mhz)</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QDoubleSpinBox" name="doubleSpinBox_amc_bw">
+                      <property name="maximum">
+                       <double>100000.000000000000000</double>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <spacer name="verticalSpacer_amc">
+                    <property name="orientation">
+                     <enum>Qt::Vertical</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>20</width>
+                      <height>40</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <widget class="QCustomPlot" name="widget_plot_amc" native="true">
+                  <property name="minimumSize">
+                   <size>
+                    <width>300</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QTextBrowser" name="textBrowser_amc"/>
+                </item>
+               </layout>
+              </widget>
+             </item>
+            </layout>
            </item>
           </layout>
          </widget>
@@ -590,7 +685,7 @@ background-color: rgb(20, 28, 36);</string>
                  <item>
                   <layout class="QHBoxLayout" name="horizontalLayout_freq">
                    <item>
-                    <widget class="QLabel" name="label">
+                    <widget class="QLabel" name="label_freq">
                      <property name="text">
                       <string>中心频点(MHz)</string>
                      </property>
